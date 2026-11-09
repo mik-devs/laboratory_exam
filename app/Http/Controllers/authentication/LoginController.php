@@ -42,28 +42,30 @@ return view('authentication.login');
     public function process_login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required|min:6',
         ]);
 
-        $credentials = [
-            'email'    => $request->input('email'),
-            'password' => $request->input('password'),
-            'status'   => 1,
-        ];
-      
+        $user = \App\Models\User::where('email', $request->input('email'))->first();
 
-        if (Auth::attempt($credentials)) {
-            // Regenerate the session to prevent session fixation
+        if ($user && \Illuminate\Support\Facades\Hash::check($request->input('password'), $user->password)) {
+            
+            if ($user->status == 0) {
+                return redirect()->back()->with('danger', 'Your account is inactive. Please contact the administrator.');
+            }
+
+            Auth::login($user);
             $request->session()->regenerate();
-
             session()->flash('success', 'Success');
-            return redirect()->route('admin.dashboard');
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            return redirect()->route('dashboard');
         }
 
         return redirect()->back()->with('danger', 'Invalid username or password');
     }
-
-
 }
 

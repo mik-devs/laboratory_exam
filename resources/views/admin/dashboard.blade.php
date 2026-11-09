@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+    <title>Dashboard - SB Admin</title>
     @include('partials.header')
 
-    <body class="sb-nav-fixed"> <!-- ITO ANG SUSI! -->
+    <body class="sb-nav-fixed"> 
         @include('partials.navbar')
 
         <div id="layoutSidenav">
@@ -15,10 +16,13 @@
                     @include('partials.analytics')
                 </main>
 
-                @include('partials.footer')
+               
             </div>
+            
         </div>
-
+         @include('partials.footer')
         @include('partials.scripts')
+
+        
     </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\student;
+namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -19,6 +19,6 @@ class DashboardController extends Controller
             'Address' => 'Pasig, Kiblawan Davao del Sur',
             'Status' => 'Single',
         ];
-        return view('student.dashboard', compact('student'));
+        return view('user.dashboard', compact('student'));
     }
 }

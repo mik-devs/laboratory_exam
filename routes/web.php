@@ -5,37 +5,52 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\authentication\LoginController;
 use App\Http\Controllers\authentication\RegisterController;
 use App\Http\Controllers\authentication\ForgetController;
-use App\Http\Controllers\student\DashboardController;
+use App\Http\Controllers\user\DashboardController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\admin\ErrorsController;
+use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\ErrorController;
 
-// Public Pages & Auth Handling
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', fn () => view('welcome'));
+
+// Guest only
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/login', [LoginController::class, 'process_login'])->name('process_login');
+
+    Route::get('/register', [RegisterController::class, 'index'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register.process');
+
+    Route::get('/forget', [ForgetController::class, 'index'])->name('forget');
 });
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
-Route::get('/forget', [ForgetController::class, 'index'])->name('forget');
-Route::get('/process-login', [LoginController::class, 'process_login'])->name('process_login'); 
+// Logged-in users
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect()->route('login');
+    })->name('logout');
 
-Route::post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return redirect()->route('login');
-})->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+});
 
-// Dashboards (Now Open)
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Admin only
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/charts', [AdminDashboardController::class, 'charts'])->name('charts');
+    Route::get('/tables', [AdminDashboardController::class, 'tables'])->name('tables');
+    Route::get('/light', [AdminDashboardController::class, 'light'])->name('light');
+    Route::get('/static', [AdminDashboardController::class, 'static'])->name('static');
 
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-Route::get('/admin/charts', [AdminDashboardController::class, 'charts'])->name('admin.charts');
-Route::get('/admin/tables', [AdminDashboardController::class, 'tables'])->name('admin.tables');
-Route::get('/admin/light', [AdminDashboardController::class, 'light'])->name('admin.light');
-Route::get('/admin/static', [AdminDashboardController::class, 'static'])->name('admin.static');
+    // Route::resource
+    Route::resource('/users', UserController::class);
+});
 
-// Error Pages
-Route::get('/errors/404', [ErrorsController::class, 'notFound'])->name('errors.404');
-Route::get('/errors/401', [ErrorsController::class, 'forbidden'])->name('errors.401');
-Route::get('/errors/500', [ErrorsController::class, 'internalServerError'])->name('errors.500');
+// Error page previews (remove in production)
+Route::prefix('errors')->name('errors.')->group(function () {
+    Route::get('/404', [ErrorController::class, 'notFound'])->name('404');
+    Route::get('/401', [ErrorController::class, 'forbidden'])->name('401');
+    Route::get('/500', [ErrorController::class, 'internalServerError'])->name('500');
+});

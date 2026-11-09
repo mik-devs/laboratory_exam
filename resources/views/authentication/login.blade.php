@@ -11,7 +11,7 @@
     <div class="card-body">
       <p class="login-box-msg">Tutial Session Class</p>
 
-      <form action="{{ route('process_login') }}" method="get"> <!-- Changed action URL to use named route -->
+      <form action="{{ route('process_login') }}" method="post"> 
       @csrf
 
       @if(session('success'))
@@ -58,12 +58,14 @@
         <i class="fa fa-user"></i> Login
         </a></button>
        
-      </div>
+      </div> 
       <!-- /.social-auth-links -->
       </form>
       <p class="mb-1">
-        <a href="forgot-password.html">forgot my password</a>
+        <a href="{{ route('forget') }}">forgot my password</a>
       </p>
+      <p class="mb-0">
+        <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
     </div>
     <!-- /.card-body -->
   </div>
@@ -77,6 +79,8 @@
 <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('backend/dist/js/adminlte.min.js') }}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bundle.min.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

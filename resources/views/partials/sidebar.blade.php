@@ -12,6 +12,12 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                 Dashboard
             </a>
+            <div class="sb-sidenav-menu-heading">Management</div>
+            <a class="nav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}"
+               href="{{ route('admin.users.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                User
+            </a>
 
             <div class="sb-sidenav-menu-heading">Interface</div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
