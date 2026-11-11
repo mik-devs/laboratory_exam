@@ -12,6 +12,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
+            
             ->when($request->search, fn ($q, $s) =>
                 $q->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%"))
             ->orderBy('id', 'asc') 
@@ -77,10 +78,13 @@ class UserController extends Controller
         }
 
         if ($user->role === 'admin') {
-            return redirect()->route('admin.users.index')->with('danger', 'Hindi maaaring i-delete ang Administrator account.');
+            return redirect()->route('admin.users.index')->with('danger', 'The Administrator account cannot be deactivated.');
         }
-        $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted.');
+        $user->update([
+            'status' => 0
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'User has been deactivated successfully.');
     }
 }
