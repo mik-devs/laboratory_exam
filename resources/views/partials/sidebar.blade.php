@@ -18,6 +18,16 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                 User
             </a>
+            <a class="nav-link {{ request()->routeIs('admin.student-employees.index') ? 'active' : '' }}"
+               href="{{ route('admin.student-employees.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Profiles
+            </a>
+            <a class="nav-link {{ request()->routeIs('admin.departments.index') ? 'active' : '' }}"
+               href="{{ route('admin.departments.index') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                Departments
+            </a>
 
             <div class="sb-sidenav-menu-heading">Interface</div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"

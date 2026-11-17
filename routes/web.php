@@ -9,6 +9,8 @@ use App\Http\Controllers\user\DashboardController;
 use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\admin\UserController;
 use App\Http\Controllers\admin\ErrorController;
+use App\Http\Controllers\admin\DepartmentController; 
+use App\Http\Controllers\admin\StudentEmployeeController;
 
 Route::get('/', fn () => view('welcome'));
 
@@ -46,9 +48,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Route::resource
     Route::resource('/users', UserController::class);
+    
+    Route::resource('/departments', DepartmentController::class); 
+    Route::resource('/student-employees', StudentEmployeeController::class); 
+
 });
 
-// Error page previews (remove in production)
 Route::prefix('errors')->name('errors.')->group(function () {
     Route::get('/404', [ErrorController::class, 'notFound'])->name('404');
     Route::get('/401', [ErrorController::class, 'forbidden'])->name('401');

@@ -12,7 +12,6 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
-            
             ->when($request->search, fn ($q, $s) =>
                 $q->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%"))
             ->orderBy('id', 'asc') 
@@ -33,11 +32,12 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:6', 'confirmed'],
-            'role'     => ['required', 'in:admin,user'],
+            // BINAGO: in:admin,student,employee
+            'role'     => ['required', 'in:admin,student,employee'], 
             'status'   => ['required', 'boolean'],
         ]);
 
-        User::create($data); // 'hashed' cast hashes the password
+        User::create($data); 
 
         return redirect()->route('admin.users.index')->with('success', 'User created.');
     }
@@ -58,7 +58,8 @@ class UserController extends Controller
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => ['nullable', 'min:6', 'confirmed'],
-            'role'     => ['required', 'in:admin,user'],
+            // BINAGO: in:admin,student,employee
+            'role'     => ['required', 'in:admin,student,employee'], 
             'status'   => ['required', 'boolean'],
         ]);
 

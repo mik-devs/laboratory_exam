@@ -33,8 +33,9 @@
     <div class="col-md-6 mb-3">
         <label class="form-label">Role</label>
         <select name="role" class="form-select" required>
-            @foreach (['user' => 'User', 'admin' => 'Admin'] as $value => $label)
-                <option value="{{ $value }}" @selected(old('role', $user->role ?? 'user') === $value)>{{ $label }}</option>
+
+        @foreach (['admin' => 'Admin', 'student' => 'Student', 'employee' => 'Employee'] as $value => $label)
+                <option value="{{ $value }}" @selected(old('role', $user->role ?? 'student') === $value)>{{ $label }}</option>
             @endforeach
         </select>
     </div>
