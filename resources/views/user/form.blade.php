@@ -10,8 +10,8 @@
 @endif
 
 <div class="mb-3">
-    <label class="form-label">Name</label>
-    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name ?? '') }}" required>
+    <label class="form-label">Username</label>
+    <input type="text" name="username" class="form-control" value="{{ old('username', $user->username ?? '') }}" required>
 </div>
 
 <div class="mb-3">
@@ -31,11 +31,10 @@
 
 <div class="row">
     <div class="col-md-6 mb-3">
-        <label class="form-label">Role</label>
-        <select name="role" class="form-select" required>
-
-        @foreach (['admin' => 'Admin', 'student' => 'Student', 'employee' => 'Employee'] as $value => $label)
-                <option value="{{ $value }}" @selected(old('role', $user->role ?? 'student') === $value)>{{ $label }}</option>
+        <label class="form-label">User Type</label>
+        <select name="user_type" class="form-select" required>
+            @foreach (['student' => 'Student', 'admin' => 'Admin', 'employee' => 'Employee'] as $value => $label)
+                <option value="{{ $value }}" @selected(old('user_type', $user->user_type ?? 'student') === $value)>{{ $label }}</option>
             @endforeach
         </select>
     </div>

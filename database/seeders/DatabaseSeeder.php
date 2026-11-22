@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Department;
 use App\Models\StudentEmployee;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -13,13 +13,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['username' => 'admin'],
             [
-                'name' => 'Administrator',
+                'email' => 'admin@example.com',
                 'password' => Hash::make('Admin@12345'),
-                'role' => 'admin',
+                'user_type' => 'admin',
                 'status' => 1,
-                'email_verified_at' => now(),
             ]
         );
 
@@ -40,82 +39,85 @@ class DatabaseSeeder extends Seeder
         );
 
         $mikko = User::updateOrCreate(
-            ['email' => 'mikko@example.com'],
+            ['username' => 'mikko'],
             [
-                'name' => 'Mikko Momo',
+                'email' => 'mikko@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'student', 
+                'user_type' => 'student',
                 'status' => 1,
-                'email_verified_at' => now(),
             ]
         );
 
         $mark = User::updateOrCreate(
-            ['email' => 'mark@example.com'],
+            ['username' => 'mark'],
             [
-                'name' => 'Mark Zucker Burg',
+                'email' => 'mark@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'student', 
+                'user_type' => 'student',
                 'status' => 1,
-                'email_verified_at' => now(),
             ]
         );
 
         $jayson = User::updateOrCreate(
-            ['email' => 'jayson@example.com'],
+            ['username' => 'jayson'],
             [
-                'name' => 'Jayson Lozada',
+                'email' => 'jayson@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'employee', 
+                'user_type' => 'employee',
                 'status' => 1,
-                'email_verified_at' => now(),
             ]
         );
 
         $mikkoDev = User::updateOrCreate(
-            ['email' => 'mikko.dev@example.com'],
+            ['username' => 'mikko.dev'],
             [
-                'name' => 'Mikko Momo Dev',
+                'email' => 'mikko.dev@example.com',
                 'password' => Hash::make('password123'),
-                'role' => 'employee',
+                'user_type' => 'employee',
                 'status' => 1,
-                'email_verified_at' => now(),
             ]
         );
 
-        
         StudentEmployee::updateOrCreate(
-            ['user_id' => $mikko->id],
+            ['user_id' => $mikko->user_id],
             [
                 'student_id' => '2024-0001',
-                'program' => 'BS Information Technology',
+                'name' => 'Mikko',
+                'lastname' => 'Momo',
+                'middlename' => 'C',
                 'department_id' => $deptIT->id,
             ]
         );
 
         StudentEmployee::updateOrCreate(
-            ['user_id' => $mark->id],
+            ['user_id' => $mark->user_id],
             [
                 'student_id' => '2024-0002',
-                'program' => 'BS Civil Engineering',
+                'name' => 'Mark',
+                'lastname' => 'Zuckerberg',
+                'middlename' => 'Elliot',
                 'department_id' => $deptEng->id,
             ]
         );
 
         StudentEmployee::updateOrCreate(
-            ['user_id' => $jayson->id],
+            ['user_id' => $jayson->user_id],
             [
-                'student_id' => null, 
-                'program' => 'IT Support Specialist',
+                'student_id' => null,
+                'name' => 'Jayson',
+                'lastname' => 'Lozada',
+                'middlename' => 'Santos',
                 'department_id' => $deptIT->id,
             ]
         );
 
         StudentEmployee::updateOrCreate(
-            ['user_id' => $mikkoDev->id],
+            ['user_id' => $mikkoDev->user_id],
             [
                 'student_id' => null,
-                'program' => 'Software Engineer',
+                'name' => 'Mikko',
+                'lastname' => 'Momo',
+                'middlename' => 'Cruz',
                 'department_id' => $deptEng->id,
             ]
         );

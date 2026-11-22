@@ -1,6 +1,10 @@
+@php
+    $isAdmin = auth()->user()?->user_type === 'admin';
+    $homeRoute = $isAdmin ? route('admin.dashboard') : route('user.dashboard');
+@endphp
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="{{ route('admin.dashboard') }}">Start Bootstrap</a>
+    <a class="navbar-brand ps-3" href="{{ $homeRoute }}">Start Bootstrap</a>
 
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
@@ -22,6 +26,13 @@
                 <i class="fas fa-user fa-fw"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                @unless ($isAdmin)
+                    <li>
+                        <a class="dropdown-item" href="{{ route('user.profile.edit') }}">
+                            <i class="fas fa-user-circle me-2"></i>My Profile
+                        </a>
+                    </li>
+                @endunless
                 <li><a class="dropdown-item" href="#!">Settings</a></li>
                 <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                 <li><hr class="dropdown-divider" /></li>

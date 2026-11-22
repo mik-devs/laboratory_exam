@@ -37,8 +37,8 @@
                                             @csrf
 
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputName" type="text" name="name" value="{{ old('name') }}" placeholder="Enter your full name" required />
-                                                <label for="inputName">Full Name</label>
+                                                <input class="form-control" id="inputUsername" type="text" name="username" value="{{ old('username') }}" placeholder="Enter your username" required />
+                                                <label for="inputUsername">Username</label>
                                             </div>
 
                                             <div class="form-floating mb-3">

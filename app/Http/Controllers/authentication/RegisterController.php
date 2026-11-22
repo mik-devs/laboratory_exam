@@ -5,7 +5,6 @@ namespace App\Http\Controllers\authentication;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
@@ -17,22 +16,22 @@ class RegisterController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        $validated = $request->validate([
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'role'     => 'user',                          
-            'status'   => 1,                               
+            'username'  => $validated['username'],
+            'email'     => $validated['email'],
+            'password'  => $validated['password'],
+            'user_type' => 'student',
+            'status'    => 1,
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Account created successfully!');
+        return redirect()->route('user.dashboard')->with('success', 'Account created successfully!');
     }
 }

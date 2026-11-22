@@ -58,11 +58,11 @@ return view('authentication.login');
             $request->session()->regenerate();
             session()->flash('success', 'Success');
 
-            if ($user->role === 'admin') {
+            if ($user->user_type === 'admin') {
                 return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->route('dashboard');
+            return redirect()->route('user.dashboard');
         }
 
         return redirect()->back()->with('danger', 'Invalid username or password');

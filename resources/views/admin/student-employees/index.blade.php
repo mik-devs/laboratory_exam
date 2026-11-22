@@ -21,10 +21,9 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Name (User Account)</th>
-                        <th>Role</th>
+                        <th>Name</th>
+                        <th>User Type</th>
                         <th>Student ID</th>
-                        <th>Program</th>
                         <th>Department</th>
                         <th>Actions</th>
                     </tr>
@@ -32,11 +31,12 @@
                 <tbody>
                     @forelse($profiles as $profile)
                     <tr>
-                        <!-- Dito natin makikita ang power ng Foreign Key relationship! -->
-                        <td>{{ $profile->user->name }} <br><small class="text-muted">{{ $profile->user->email }}</small></td>
-                        <td><span class="badge bg-secondary">{{ ucfirst($profile->user->role) }}</span></td>
+                        <td>
+                            {{ $profile->lastname }}, {{ $profile->name }} {{ $profile->middlename }}
+                            <br><small class="text-muted">{{ $profile->user->username ?? 'N/A' }}</small>
+                        </td>
+                        <td><span class="badge bg-secondary">{{ ucfirst($profile->user->user_type ?? 'N/A') }}</span></td>
                         <td>{{ $profile->student_id ?? 'N/A' }}</td>
-                        <td>{{ $profile->program ?? 'N/A' }}</td>
                         <td>{{ $profile->department->college ?? 'N/A' }}</td>
                         <td>
                             <a href="{{ route('admin.student-employees.edit', $profile->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -47,7 +47,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" class="text-center">No profiles found.</td></tr>
+                    <tr><td colspan="5" class="text-center">No profiles found.</td></tr>
                     @endforelse
                 </tbody>
             </table>

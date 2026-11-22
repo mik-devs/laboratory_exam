@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid px-4">
     <h1 class="mt-4">Add Student/Employee Profile</h1>
-    
+
     <div class="card mb-4">
         <div class="card-body">
             @if ($errors->any())
@@ -16,14 +16,16 @@
 
             <form action="{{ route('admin.student-employees.store') }}" method="POST">
                 @csrf
-                
+
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Select User</label>
                         <select name="user_id" class="form-select" required>
                             <option value="">-- Select User --</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }} ({{ ucfirst($user->role) }})</option>
+                                <option value="{{ $user->user_id }}" @selected(old('user_id') == $user->user_id)>
+                                    {{ $user->username }} ({{ ucfirst($user->user_type) }})
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -32,9 +34,26 @@
                         <select name="department_id" class="form-select" required>
                             <option value="">-- Select Department --</option>
                             @foreach($departments as $dept)
-                                <option value="{{ $dept->id }}">{{ $dept->department_id }} - {{ $dept->college }}</option>
+                                <option value="{{ $dept->id }}" @selected(old('department_id') == $dept->id)>
+                                    {{ $dept->department_id }} - {{ $dept->college }}
+                                </option>
                             @endforeach
                         </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="lastname" class="form-control" value="{{ old('lastname') }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Middle Name</label>
+                        <input type="text" name="middlename" class="form-control" value="{{ old('middlename') }}">
                     </div>
                 </div>
 
@@ -42,10 +61,6 @@
                     <div class="col-md-6">
                         <label class="form-label">Student ID (Optional)</label>
                         <input type="text" name="student_id" class="form-control" value="{{ old('student_id') }}">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Program (Optional)</label>
-                        <input type="text" name="program" class="form-control" value="{{ old('program') }}">
                     </div>
                 </div>
 

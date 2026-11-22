@@ -12,13 +12,14 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::query()
-            ->when($request->search, fn ($q, $s) =>
-                $q->where('name', 'like', "%{$s}%")->orWhere('email', 'like', "%{$s}%"))
-            ->orderBy('id', 'asc') 
+            ->when($request->search, fn ($q, $s) => $q
+                ->where('username', 'like', "%{$s}%")
+                ->orWhere('email', 'like', "%{$s}%"))
+            ->orderBy('user_id', 'asc')
             ->paginate(10)
             ->withQueryString();
 
-        return view('user.index', compact('users')); 
+        return view('user.index', compact('users'));
     }
 
     public function create()
@@ -29,15 +30,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:6', 'confirmed'],
-            // BINAGO: in:admin,student,employee
-            'role'     => ['required', 'in:admin,student,employee'], 
-            'status'   => ['required', 'boolean'],
+            'username'  => ['required', 'string', 'max:255', 'unique:users,username'],
+            'email'     => ['required', 'email', 'unique:users,email'],
+            'password'  => ['required', 'string', 'min:6', 'confirmed'],
+            'user_type' => ['required', Rule::in(['student', 'admin', 'employee'])],
+            'status'    => ['required', 'boolean'],
         ]);
 
-        User::create($data); 
+        User::create($data);
 
         return redirect()->route('admin.users.index')->with('success', 'User created.');
     }
@@ -55,12 +55,11 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
-            'password' => ['nullable', 'min:6', 'confirmed'],
-            // BINAGO: in:admin,student,employee
-            'role'     => ['required', 'in:admin,student,employee'], 
-            'status'   => ['required', 'boolean'],
+            'username'  => ['required', 'string', 'max:255', Rule::unique('users', 'username')->ignore($user->user_id, 'user_id')],
+            'email'     => ['required', 'email', Rule::unique('users', 'email')->ignore($user->user_id, 'user_id')],
+            'password'  => ['nullable', 'string', 'min:6', 'confirmed'],
+            'user_type' => ['required', Rule::in(['student', 'admin', 'employee'])],
+            'status'    => ['required', 'boolean'],
         ]);
 
         if (empty($data['password'])) {
@@ -74,16 +73,16 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if ($user->id === auth()->id()) {
+        if ($user->user_id === auth()->id()) {
             return back()->with('danger', 'You cannot delete your own account.');
         }
 
-        if ($user->role === 'admin') {
+        if ($user->user_type === 'admin') {
             return redirect()->route('admin.users.index')->with('danger', 'The Administrator account cannot be deactivated.');
         }
 
         $user->update([
-            'status' => 0
+            'status' => 0,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User has been deactivated successfully.');

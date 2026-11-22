@@ -11,7 +11,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <form method="GET" class="d-flex gap-2">
                 <input type="text" name="search" value="{{ request('search') }}"
-                       class="form-control" placeholder="Search name or email">
+                       class="form-control" placeholder="Search username or email">
                 <button class="btn btn-secondary">Search</button>
             </form>
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add User</a>
@@ -21,16 +21,16 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th width="200">Actions</th>
+                        <th>#</th><th>Username</th><th>Email</th><th>User Type</th><th>Status</th><th width="200">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                 @forelse ($users as $user)
                     <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->user_id }}</td>
+                        <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ ucfirst($user->role) }}</td>
+                        <td>{{ ucfirst($user->user_type) }}</td>
                         <td>
                             <span class="badge bg-{{ $user->status ? 'success' : 'secondary' }}">
                                 {{ $user->status ? 'Active' : 'Inactive' }}
@@ -39,7 +39,7 @@
                         <td>
                             <a href="{{ route('admin.users.show', $user) }}" class="btn btn-sm btn-info">View</a>
 
-                            @if($user->role !== 'admin')
+                            @if($user->user_type !== 'admin')
                                 <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>
                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline"
                                       onsubmit="return confirm('Delete this user?')">

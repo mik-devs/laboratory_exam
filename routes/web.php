@@ -1,16 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\admin\DepartmentController;
+use App\Http\Controllers\admin\ErrorController;
+use App\Http\Controllers\admin\StudentEmployeeController;
+use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\authentication\ForgetController;
 use App\Http\Controllers\authentication\LoginController;
 use App\Http\Controllers\authentication\RegisterController;
-use App\Http\Controllers\authentication\ForgetController;
 use App\Http\Controllers\user\DashboardController;
-use App\Http\Controllers\admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\admin\UserController;
-use App\Http\Controllers\admin\ErrorController;
-use App\Http\Controllers\admin\DepartmentController; 
-use App\Http\Controllers\admin\StudentEmployeeController;
+use App\Http\Controllers\user\ProfileController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'));
 
@@ -25,17 +26,23 @@ Route::middleware('guest')->group(function () {
     Route::get('/forget', [ForgetController::class, 'index'])->name('forget');
 });
 
-// Logged-in users
+// Logout
 Route::middleware('auth')->group(function () {
     Route::post('/logout', function () {
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+
         return redirect()->route('login');
     })->name('logout');
+});
 
+// Student / Employee routes
+Route::middleware('auth')->prefix('user')->name('user.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 // Admin only
@@ -46,12 +53,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/light', [AdminDashboardController::class, 'light'])->name('light');
     Route::get('/static', [AdminDashboardController::class, 'static'])->name('static');
 
-    // Route::resource
     Route::resource('/users', UserController::class);
-    
-    Route::resource('/departments', DepartmentController::class); 
-    Route::resource('/student-employees', StudentEmployeeController::class); 
-
+    Route::resource('/departments', DepartmentController::class);
+    Route::resource('/student-employees', StudentEmployeeController::class);
 });
 
 Route::prefix('errors')->name('errors.')->group(function () {

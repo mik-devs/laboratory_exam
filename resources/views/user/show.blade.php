@@ -6,10 +6,10 @@
     <div class="card mb-4">
         <div class="card-body">
             <table class="table table-borderless w-auto">
-                <tr><th>ID</th><td>{{ $user->id }}</td></tr>
-                <tr><th>Name</th><td>{{ $user->name }}</td></tr>
+                <tr><th>ID</th><td>{{ $user->user_id }}</td></tr>
+                <tr><th>Username</th><td>{{ $user->username }}</td></tr>
                 <tr><th>Email</th><td>{{ $user->email }}</td></tr>
-                <tr><th>Role</th><td>{{ ucfirst($user->role) }}</td></tr>
+                <tr><th>User Type</th><td>{{ ucfirst($user->user_type) }}</td></tr>
                 <tr><th>Status</th><td>{{ $user->status ? 'Active' : 'Inactive' }}</td></tr>
                 <tr><th>Created</th><td>{{ $user->created_at->format('M d, Y h:i A') }}</td></tr>
             </table>

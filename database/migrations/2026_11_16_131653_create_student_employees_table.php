@@ -13,15 +13,21 @@ return new class extends Migration
     {
         Schema::create('student_employees', function (Blueprint $table) {
             $table->id();
-            
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            
-            $table->string('student_id')->nullable()->unique(); 
-            
-            $table->string('program')->nullable();
-            
-            $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
-            
+
+            $table->foreignId('user_id')
+                ->constrained('users', 'user_id')
+                ->cascadeOnDelete();
+
+            $table->string('student_id')->nullable()->unique();
+            $table->string('name');
+            $table->string('lastname');
+            $table->string('middlename')->nullable();
+
+            $table->foreignId('department_id')
+                ->nullable()
+                ->constrained('departments')
+                ->nullOnDelete();
+
             $table->timestamps();
         });
     }
